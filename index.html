@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <title>Strategies Explorer</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+  <div id="header">
+    <h1>Lärostrategier</h1>
+    <div class="controls">
+      <!-- <strong id="rendered-count"></strong>/<strong id="selected-count"></strong><strong id="data-count"></strong> -->
+      <!-- <div class="fillbar"><div id="selected-bar"><div id="rendered-bar">&nbsp;</div></div></div> -->
+      <!-- <span class="settings">
+        <button id="hide-ticks">Hide Ticks</button>
+        <button id="show-ticks" disabled="disabled">Show Ticks</button>
+        <button id="dark-theme">Dark</button>
+        <button id="light-theme" disabled="disabled">Light</button>
+      </span> -->
+    </div>
+    <div style="clear:both;"></div>
+  </div>
+  <div id="chart">
+    <canvas id="background"></canvas>
+    <canvas id="foreground"></canvas>
+    <canvas id="highlight"></canvas>
+    <svg></svg>
+  </div>
+  <div id="wrap">
+    <div class="third" id="controls">
+      <div class="bright">
+        <h3>Lärostrategier på Kunskapsskolan</h3>
+        <p>
+          Detta verktyg ska du få bekanta dig med.
+        </p>
+        <p>
+          Visualiseringstypen ovan kallas för <i>parallella koordinater</i> där varje linje motsvarar en spcifik strategi för en specifik skola
+        </p>
+      </div>
+
+      <div class="little-box">
+        <h3>Interagera med visualiseringen</h3>
+        <p>
+          <strong>Flytta en axel</strong>: Dra i texten ovanför axeln<br/>
+          <strong>Filtrera</strong>: Dra upp eller ner längst axeln<br/>
+          <strong>Ta bort filtret</strong>: Klicka utanför filtreringen<br/>
+          <strong>Filtrera på skolor</strong>: Klicka på skolan i listan<br/>
+          <strong>Filtrera på strategier</strong>: Använd sökrutan
+        </p>
+      </div>
+      <!-- <div class="little-box">
+        <h3>Credits &amp; License</h3>
+          <p>
+          Adapted from examples by<br/>
+          <a href="http://bl.ocks.org/1341021">Mike Bostock</a> and <a href="http://bl.ocks.org/1341281">Jason Davies</a><br/>
+          </p>
+          <p>
+            Copyright &copy; 2012, Kai Chang<br/>
+            All rights reserved. Released under the <a href="http://opensource.org/licenses/bsd-3-clause">BSD License</a>.
+          </p>
+        </p>
+      </div> -->
+    </div>
+    <div  class="third">
+      <small>
+        <!--Last rendered <strong id="render-speed"></strong> lines-->
+      </small>
+      <h3>Schools</h3>
+      <p id="legend">
+      </p>
+    </div>
+    <div class="third">
+      <h3>Lite av det som finns <input type="text" id="search" placeholder="Sök strategier"></input></h3>
+      <p id="food-list">
+      </p>
+    </div>
+  </div>
+  </body>
+  <script src='https://d3js.org/d3.v2.min.js'></script>
+  <script src="https://underscorejs.org/underscore.js"></script>
+  <script src="parallell.js"></script>
+</html>

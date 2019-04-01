@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="css/style.css">
+    <script src='https://d3js.org/d3.v4.min.js'></script>
+    <script src="https://d3js.org/d3-selection-multi.v0.4.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+  </head>
+  <body>
+    <form>
+      <input type="radio" name="chart" value="school.json" checked=checked onclick="main(this.value)">School<br>
+      <input type="radio" name="chart" value="strat.json" onclick="main(this.value)">Strategy<br>
+    </form>
+        <script src="js/sun.js"></script>
+        <script src="js/bar.js"></script>
+        <script>main("school.json")</script>
+  </body>
+</html>
