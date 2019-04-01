@@ -12,7 +12,7 @@ var m = [60, 0, 10, 0],
     yscale = {},
     dragging = {},
     line = d3.svg.line(),
-    axis = d3.svg.axis().orient("left").ticks(1+height/50),
+    axis = d3.svg.axis().orient("left").ticks(15),
     data,
     foreground,
     background,
@@ -96,7 +96,17 @@ d3.csv("strategies.csv", function(raw_data) {
       }
     };
     return d;
+    
   });
+
+
+  //Get all schools in a list to compare later
+  function allSchools(d){
+  console.log(d);
+    
+  }
+
+
 
   // Extract the list of numerical dimensions and create a scale for each.
   xscale.domain(dimensions = d3.keys(data[0]).filter(function(k) {
@@ -173,7 +183,7 @@ d3.csv("strategies.csv", function(raw_data) {
       .attr("class", "label")
       .text(String)
       .append("title")
-        .text("Click to invert. Drag to reorder");
+        .text("Klicka för att invertera, dra för att byta plats");
 
   // Add and store a brush for each axis.
   g.append("svg:g")
@@ -184,11 +194,11 @@ d3.csv("strategies.csv", function(raw_data) {
       .attr("x", -23)
       .attr("width", 36)
       .append("title")
-        .text("Drag up or down to brush along this axis");
+        .text("Dra upp eller ner för att filtrera denna axel");
 
   g.selectAll(".extent")
       .append("title")
-        .text("Drag or resize this filter");
+        .text("Dra eller ändra storlek för detta filter");
 
 
   legend = create_legend(colors,brush);
@@ -229,11 +239,11 @@ function create_legend(colors,brush) {
   // filter by school
   var legend = legend_data
     .enter().append("div")
-      .attr("title", "Hide school")
+      .attr("title", "Välj skola")
       .on("click", function(d) {
-        // toggle food school
+        // toggle school
         if (_.contains(excluded_schools, d)) {
-          d3.select(this).attr("title", "Hide school")
+          d3.select(this).attr("title", "Välj skola")
           excluded_schools = _.difference(excluded_schools,[d]);
           brush();
         } else {
@@ -291,7 +301,7 @@ function data_table(sample) {
     return a[col] < b[col] ? -1 : 1;
   });
 
-  var table = d3.select("#food-list")
+  var table = d3.select("#school-list")
     .html("")
     .selectAll(".row")
       .data(sample)
@@ -340,7 +350,8 @@ function selection_stats(opacity, n, total) {
 function highlight(d) {
   d3.select("#foreground").style("opacity", "0.25");
   d3.selectAll(".row").style("opacity", function(p) { return (d.school == p) ? null : "0.3" });
-  path(d, highlighted, color(d.school,1)); 
+  path(d, highlighted, color(d.school,1));
+  console.log(d["Tumme Upp"]);
 }
 
 // Remove highlight

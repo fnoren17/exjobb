@@ -1,4 +1,4 @@
-name,school,Upp,Ner,Oanvänd
+name,school,Tumme Upp,Tumme Ner,Oanvänd
 "Att få respons",Borlänge,7,26,12
 "Att få respons",Borås,30,25,9
 "Att få respons",Enköping,20,15,16
@@ -17,7 +17,7 @@ name,school,Upp,Ner,Oanvänd
 "Att få respons",Nyköping,18,25,11
 "Att få respons",Saltsjöbaden,17,13,30
 "Att få respons",Spånga,9,5,16
-"Att få respons",Trelleborg,7,8,17
+"Att få respons",Trelleborg,7,8,4
 "Att få respons",Tumba,14,7,17
 "Att få respons",Tyresö,23,11,24
 "Att få respons",Täby,11,9,22
@@ -94,8 +94,8 @@ name,school,Upp,Ner,Oanvänd
 "Koll på materialet",Spånga,24,30,11
 "Koll på materialet",Trelleborg,15,14,16
 "Koll på materialet",Tumba,10,17,19
-"Koll på materialet",Tyresö,7,5	2
-"Koll på materialet",Täby,25,16	19
+"Koll på materialet",Tyresö,7,5,2
+"Koll på materialet",Täby,25,16,19
 "Koll på materialet",Uppsala,20,5,27
 "Koll på materialet",Uppsala Norra,29,22,27
 "Koll på materialet",Varberg,27,19,23
