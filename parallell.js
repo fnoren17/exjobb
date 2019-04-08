@@ -19,6 +19,7 @@ var m = [60, 0, 10, 0],
     highlighted,
     dimensions,                           
     legend,
+    category,
     render_speed = 50,
     brush_count = 0,
     excluded_schools = [],
@@ -52,6 +53,7 @@ var colors = {
   "Varberg": [120,56,40]
 };
 
+var categories = ["Q","Z","W","X"];
 // Scale chart and canvas height
 d3.select("#chart")
     .style("height", (h + m[0] + m[2]) + "px")
@@ -66,7 +68,7 @@ d3.selectAll("canvas")
 foreground = document.getElementById('foreground').getContext('2d');
 foreground.globalCompositeOperation = "destination-over";
 foreground.strokeStyle = "rgba(0,100,160,0.1)";
-foreground.lineWidth = 1.7;
+foreground.lineWidth = 2;
 foreground.fillText("Loading...",w/2,h/2);
 
 // Highlight canvas for temporary interactions
@@ -202,7 +204,7 @@ d3.csv("strategies.csv", function(raw_data) {
 
 
   legend = create_legend(colors,brush);
-
+  
   // Render full foreground
   brush();
 
@@ -322,6 +324,24 @@ function data_table(sample) {
       .text(function(d) { return d.name; })
 }
 
+function category_table(sample){
+var category = d3.select("#category")
+.html("")
+.selectAll(".row")
+  .data(sample)
+.enter().append("div")
+
+
+category
+.append("span")
+  .attr("class", "color-block")
+  .style("background", function(d) { return color(d.school,0.85) })
+
+category
+.append("span")
+  .text(function(d) { return d["category"]; })
+}
+
 // Adjusts rendering speed 
 function optimize(timer) {
   var delta = (new Date()).getTime() - timer;
@@ -351,7 +371,7 @@ function highlight(d) {
   d3.select("#foreground").style("opacity", "0.25");
   d3.selectAll(".row").style("opacity", function(p) { return (d.school == p) ? null : "0.3" });
   path(d, highlighted, color(d.school,1));
-  console.log(d["Tumme Upp"]);
+  console.log(d["Behjälplig"]);
 }
 
 // Remove highlight
@@ -490,9 +510,13 @@ function brush() {
     });
 
   // free text search
-  var query = d3.select("#search")[0][0].value;
-  if (query.length > 0) {
-    selected = search(selected, query);
+  var nameQuery = d3.select("#search")[0][0].value;
+  if (nameQuery.length > 0) {
+    selected = search(selected, nameQuery);
+  }
+  var catQuery = d3.select("#searchC")[0][0].value;
+  if (catQuery.length > 0) {
+    selected = searchC(selected, catQuery);
   }
 
   if (selected.length < data.length && selected.length > 0) {
@@ -542,6 +566,8 @@ function paths(selected, ctx, count) {
   shuffled_data = _.shuffle(selected);
 
   data_table(shuffled_data.slice(0,25));
+
+  category_table(shuffled_data.slice(0,25));
 
   ctx.clearRect(0,0,w+1,h+1);
 
@@ -644,9 +670,9 @@ function actives() {
   });
 
   // free text search
-  var query = d3.select("#search")[0][0].value;
-  if (query > 0) {
-    selected = search(selected, query);
+  var nameQuery = d3.select("#search")[0][0].value;
+  if (nameQuery > 0) {
+    selected = search(selected, nameQuery);
   }
 
   return selected;
@@ -740,6 +766,7 @@ d3.select("#keep-data").on("click", keep_data);
 d3.select("#exclude-data").on("click", exclude_data);
 d3.select("#export-data").on("click", export_csv);
 d3.select("#search").on("keyup", brush);
+d3.select("#searchC").on("keyup", brush);
 
 
 // Appearance toggles
@@ -779,4 +806,10 @@ function light_theme() {
 function search(selection,str) {
   pattern = new RegExp(str,"i")
   return _(selection).filter(function(d) { return pattern.exec(d.name); });
+}
+
+
+function searchC(selection,str) {
+  pattern = new RegExp(str,"i")
+  return _(selection).filter(function(d) { return pattern.exec(d.category); });
 }
