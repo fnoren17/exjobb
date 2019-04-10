@@ -813,3 +813,9 @@ function searchC(selection,str) {
   pattern = new RegExp(str,"i")
   return _(selection).filter(function(d) { return pattern.exec(d.category); });
 }
+
+d3.select("#schoolheader")
+  .on("click",function(){
+    excluded_schools = [];
+    brush();
+  })

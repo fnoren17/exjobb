@@ -239,3 +239,7 @@ html, body {
   .dark ::-webkit-scrollbar-thumb {
     background: #444;
   }
+
+  a {
+    color: #000;
+  }
