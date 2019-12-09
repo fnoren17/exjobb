@@ -23,6 +23,7 @@ html, body {
   }
   #wrap {
     padding: 0 3.5%;
+    width: 100%;
   }
   svg {
     font-family: Ubuntu, Tahoma, Helvetica, sans-serif;
@@ -88,16 +89,16 @@ html, body {
   .dark .axis text.label {
     fill: #ddd;
   }
-  .quarter, .third, .half {
+  .quarter, .sixth, .half {
     float: left;
   }
   .quarter {
     width: 23%;
     margin: 0 1%;
   }
-  .third {
-    width: 31.3%;
-    margin: 0 1%;
+  .sixth {
+    width: 15%;
+    margin: 1%;
   }
   .half {
     width: 48%;
@@ -191,7 +192,7 @@ html, body {
     display: inline-block;
   }
   .little-box {
-    width: 268px;
+    width: 200px;
     float: left;
   }
   #header {

@@ -53,7 +53,6 @@ var colors = {
   "Varberg": [120,56,40]
 };
 
-var categories = ["Q","Z","W","X"];
 // Scale chart and canvas height
 d3.select("#chart")
     .style("height", (h + m[0] + m[2]) + "px")
@@ -89,7 +88,7 @@ var svg = d3.select("svg")
     .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
 // Load the data and visualization
-d3.csv("strategies.csv", function(raw_data) {
+d3.csv("csv/strategies.csv", function(raw_data) {
   // Convert quantitative scales to floats
   data = raw_data.map(function(d) {
     for (var k in d) {
@@ -100,15 +99,6 @@ d3.csv("strategies.csv", function(raw_data) {
     return d;
     
   });
-
-
-  //Get all schools in a list to compare later
-  function allSchools(d){
-  console.log(d);
-    
-  }
-
-
 
   // Extract the list of numerical dimensions and create a scale for each.
   xscale.domain(dimensions = d3.keys(data[0]).filter(function(k) {
@@ -161,7 +151,7 @@ d3.csv("strategies.csv", function(raw_data) {
             remove_axis(d,g);
           }
 
-          // TODO required to avoid a bug
+  
           xscale.domain(dimensions);
           update_ticks(d, extent);
 
@@ -308,11 +298,11 @@ function data_table(sample) {
     .selectAll(".row")
       .data(sample)
     .enter().append("div")
+    .append("a")
+      .attr("href","#")
       .on("mouseover", highlight)
       .on("mouseout", unhighlight)
-      .on("click", function(){
-        console.log("hello")
-      });
+      .on("click", click);
 
   table
     .append("span")
@@ -330,7 +320,9 @@ var category = d3.select("#category")
 .selectAll(".row")
   .data(sample)
 .enter().append("div")
-
+.append("a")
+.attr("href","#")
+.on("click", catClick);
 
 category
 .append("span")
@@ -341,6 +333,47 @@ category
 .append("span")
   .text(function(d) { return d["category"]; })
 }
+
+function subject_table(sample){
+var subject = d3.select("#subject-list")
+.html("")
+.selectAll(".row")
+  .data(sample)
+.enter().append("div")
+.append("a")
+.attr("href","#")
+.on("click", subClick);
+
+subject
+.append("span")
+  .attr("class", "color-block")
+  .style("background", function(d) { return color(d.school,0.85) })
+
+subject
+.append("span")
+  .text(function(d) { return d["subject"]; })
+}
+
+function block_table(sample){
+var block = d3.select("#block-list")
+.html("")
+.selectAll(".row")
+  .data(sample)
+.enter().append("div")
+.append("a")
+.attr("href","#")
+.on("click", blockClick);
+
+block
+.append("span")
+  .attr("class", "color-block")
+  .style("background", function(d) { return color(d.school,0.85) })
+
+block
+.append("span")
+  .text(function(d) { return d["block"]; })
+}
+
 
 // Adjusts rendering speed 
 function optimize(timer) {
@@ -371,7 +404,26 @@ function highlight(d) {
   d3.select("#foreground").style("opacity", "0.25");
   d3.selectAll(".row").style("opacity", function(p) { return (d.school == p) ? null : "0.3" });
   path(d, highlighted, color(d.school,1));
-  console.log(d["Behjälplig"]);
+  //console.log(d["Behjälplig"]);
+}
+
+function click(d){
+  document.getElementById("search").value = d.name;
+  brush();
+}
+
+function catClick(d){
+  document.getElementById("searchC").value = d.category;
+  brush();
+}
+
+function subClick(d){
+  document.getElementById("searchS").value = d.subject;
+  brush();
+}
+function blockClick(d){
+  document.getElementById("searchB").value = d.block;
+  brush();
 }
 
 // Remove highlight
@@ -409,23 +461,23 @@ function invert_axis(d) {
 
 // Draw a single polyline
 
+// function path(d, ctx, color) {
+//   if (color) ctx.strokeStyle = color;
+//   var x = xscale(0)-15;
+//       y = yscale[dimensions[0]](d[dimensions[0]]);   // left edge
+//   ctx.beginPath();
+//   ctx.moveTo(x,y);
+//   dimensions.map(function(p,i) {
+//     x = xscale(p),
+//     y = yscale[p](d[p]);
+//     ctx.lineTo(x, y);
+//   });
+//   ctx.lineTo(x+15, y);                               // right edge
+//   ctx.stroke();
+// }
+
+
 function path(d, ctx, color) {
-  if (color) ctx.strokeStyle = color;
-  var x = xscale(0)-15;
-      y = yscale[dimensions[0]](d[dimensions[0]]);   // left edge
-  ctx.beginPath();
-  ctx.moveTo(x,y);
-  dimensions.map(function(p,i) {
-    x = xscale(p),
-    y = yscale[p](d[p]);
-    ctx.lineTo(x, y);
-  });
-  ctx.lineTo(x+15, y);                               // right edge
-  ctx.stroke();
-}
-
-
-/*function path(d, ctx, color) {
   if (color) ctx.strokeStyle = color;
   ctx.beginPath();
   var x0 = xscale(0)-15,
@@ -444,7 +496,7 @@ function path(d, ctx, color) {
   });
   ctx.lineTo(x0+15, y0);                               // right edge
   ctx.stroke();
-};*/
+};
 
 function color(d,a) {
   var c = colors[d];
@@ -519,6 +571,11 @@ function brush() {
     selected = searchC(selected, catQuery);
   }
 
+  var subQuery = d3.select("#searchS")[0][0].value;
+  if (subQuery.length > 0) {
+    selected = searchS(selected, subQuery);
+  }
+
   if (selected.length < data.length && selected.length > 0) {
     d3.select("#keep-data").attr("disabled", null);
     d3.select("#exclude-data").attr("disabled", null);
@@ -568,6 +625,8 @@ function paths(selected, ctx, count) {
   data_table(shuffled_data.slice(0,25));
 
   category_table(shuffled_data.slice(0,25));
+  subject_table(shuffled_data.slice(0,25));
+  block_table(shuffled_data.slice(0,25));
 
   ctx.clearRect(0,0,w+1,h+1);
 
@@ -678,16 +737,7 @@ function actives() {
   return selected;
 }
 
-// Export data
-function export_csv() {
-  var keys = d3.keys(data[0]);
-  var rows = actives().map(function(row) {
-    return keys.map(function(k) { return row[k]; })
-  });
-  var csv = d3.csv.format([keys].concat(rows)).replace(/\n/g,"<br/>\n");
-  var styles = "<style>body { font-family: sans-serif; font-size: 12px; }</style>";
-  window.open("text/csv").document.write(styles + csv);
-}
+
 
 // scale to window size
 window.onresize = function() {
@@ -762,45 +812,15 @@ function remove_axis(d,g) {
   update_ticks();
 }
 
-d3.select("#keep-data").on("click", keep_data);
-d3.select("#exclude-data").on("click", exclude_data);
-d3.select("#export-data").on("click", export_csv);
 d3.select("#search").on("keyup", brush);
 d3.select("#searchC").on("keyup", brush);
-
+d3.select("#searchS").on("keyup", brush);
 
 // Appearance toggles
-d3.select("#hide-ticks").on("click", hide_ticks);
-d3.select("#show-ticks").on("click", show_ticks);
-d3.select("#dark-theme").on("click", dark_theme);
-d3.select("#light-theme").on("click", light_theme);
+d3.select("#remove_filters").on("click", remove_filters);
 
-function hide_ticks() {
-  d3.selectAll(".axis g").style("display", "none");
-  //d3.selectAll(".axis path").style("display", "none");
-  d3.selectAll(".background").style("visibility", "hidden");
-  d3.selectAll("#hide-ticks").attr("disabled", "disabled");
-  d3.selectAll("#show-ticks").attr("disabled", null);
-};
-
-function show_ticks() {
-  d3.selectAll(".axis g").style("display", null);
-  //d3.selectAll(".axis path").style("display", null);
-  d3.selectAll(".background").style("visibility", null);
-  d3.selectAll("#show-ticks").attr("disabled", "disabled");
-  d3.selectAll("#hide-ticks").attr("disabled", null);
-};
-
-function dark_theme() {
-  d3.select("body").attr("class", "dark");
-  d3.selectAll("#dark-theme").attr("disabled", "disabled");
-  d3.selectAll("#light-theme").attr("disabled", null);
-}
-
-function light_theme() {
-  d3.select("body").attr("class", null);
-  d3.selectAll("#light-theme").attr("disabled", "disabled");
-  d3.selectAll("#dark-theme").attr("disabled", null);
+function remove_filters(){
+  location.reload();
 }
 
 function search(selection,str) {
@@ -814,8 +834,42 @@ function searchC(selection,str) {
   return _(selection).filter(function(d) { return pattern.exec(d.category); });
 }
 
+function searchS(selection,str) {
+  pattern = new RegExp(str,"i")
+  return _(selection).filter(function(d) { return pattern.exec(d.subject); });
+}
+
 d3.select("#schoolheader")
   .on("click",function(){
     excluded_schools = [];
     brush();
   })
+
+d3.select("#categoryheader")
+  .on("click",function(){
+    var cat = document.getElementById("searchC");
+    cat.value = "";
+    brush();
+  })
+
+  d3.select("#strategyheader")
+  .on("click",function(){
+    var strat = document.getElementById("search");
+    strat.value = "";
+    brush();
+  })
+
+  d3.select("#subjectheader")
+  .on("click",function(){
+    var subject = document.getElementById("searchS");
+    subject.value = "";
+    brush();
+  })
+  function show_ticks() {
+  d3.selectAll(".axis g").style("display", null);
+  //d3.selectAll(".axis path").style("display", null);
+  d3.selectAll(".background").style("visibility", null);
+  d3.selectAll("#show-ticks").attr("disabled", "disabled");
+  d3.selectAll("#hide-ticks").attr("disabled", null);
+}
+

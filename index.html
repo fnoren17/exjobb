@@ -3,26 +3,20 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <title>Strategies Explorer</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
   </head>
   <body>
- 
   <div id="header">
     <h1>Lärostrategier</h1>
+        <button onclick="keep_data()">Behåll filtrerad data</button>
+        <button onclick="exclude_data()">Ta bort filtrerad data</button>
     <div class="controls">
-      <!-- <strong id="rendered-count"></strong>/<strong id="selected-count"></strong><strong id="data-count"></strong> -->
-      <!-- <div class="fillbar"><div id="selected-bar"><div id="rendered-bar">&nbsp;</div></div></div> -->
-      <!-- <span class="settings">
-        <button id="hide-ticks">Hide Ticks</button>
-        <button id="show-ticks" disabled="disabled">Show Ticks</button>
-        <button id="dark-theme">Dark</button>
-        <button id="light-theme" disabled="disabled">Light</button>
-      </span> -->
+      <strong id="rendered-count"></strong>/<strong id="selected-count"></strong><!--<strong id="data-count"></strong>-->
+      <div class="fillbar"><div id="selected-bar"><div id="rendered-bar">&nbsp;</div></div></div>
+      <button id="remove_filters">Ta bort alla filter</button>
     </div>
-    
     <div style="clear:both;"></div>
   </div>
-  
   <div id="chart">
     <canvas id="background"></canvas>
     <canvas id="foreground"></canvas>
@@ -30,7 +24,7 @@
     <svg></svg>
   </div>
   <div id="wrap">
-    <div class="quarter" id="controls">
+    <div class="sixth" id="controls">
       <div class="bright">
         <h3>Lärostrategier på Kunskapsskolan</h3>
         <p>
@@ -43,12 +37,15 @@
 
       <div class="little-box">
         <h3>Interagera med visualiseringen</h3>
-        <p>
+        <p id="instructions">
           <strong>Flytta en axel</strong>: Dra i texten ovanför axeln<br/>
-          <strong>Filtrera</strong>: Dra upp eller ner längst axeln<br/>
-          <strong>Ta bort filtret</strong>: Klicka utanför filtreringen<br/>
+          <strong>Filtrera på värden</strong>: Markera intervallet på den axel du vill filtrera<br/>
+          <strong>Ta bort filtret på värden</strong>: Klicka på axeln utanför filtreringen<br/>
           <strong>Filtrera på skolor</strong>: Klicka på skolan i listan<br/>
-          <strong>Filtrera på strategier</strong>: Använd sökrutan
+          <strong>Filtrera på strategier</strong>: Använd sökrutan<br/>
+          <strong>Filtrera på kategorier</strong>: Använd sökrutan<br/>
+          <strong>Ta bort filter</strong>: Klicka på rubriken på det du vill ta bort filtret på<br/>
+          <strong>Ta bort alla filter</strong>: Klicka på knappen uppe till höger
         </p>
       </div>
       <div class="little-box">
@@ -64,7 +61,7 @@
         </p>
       </div>
     </div>
-    <div class="quarter">
+    <div class="sixth">
       <small>
         <!--Last rendered <strong id="render-speed"></strong> lines-->
       </small>
@@ -72,16 +69,20 @@
       <p id="legend">
       </p>
     </div>
-    <div  class="quarter">
+    <div  class="sixth">
       <small>
         <!--Last rendered <strong id="render-speed"></strong> lines-->
       </small>
-      <h3>Kategorier <input type="text" id="searchC" placeholder="Sök kategorier"></h3>
+      <a href="#" title="Ta bort filter"><h3 id="categoryheader">Kategorier</h3></a><input type="text" id="searchC" placeholder="Sök kategorier">
       <p id="category">
       </p>
     </div>
-    <div class="quarter">
-      <h3>Strategier <input type="text" id="search" placeholder="Sök strategier"></input></h3>
+    <div class="sixth">
+      <a href="#"><h3 id="subjectheader">Ämnen</h3><input type="text" id="searchS" placeholder="Sök ämnen"></a>
+      <p id="subject-list"></p>
+    </div>
+    <div class="sixth">
+      <a href="#" title="Ta bort filter"><h3 id="strategyheader">Strategier</h3></a><input type="text" id="search" placeholder="Sök strategier"></input>
       <p id="school-list">
       </p>
     </div>
@@ -89,5 +90,5 @@
   </body>
   <script src='https://d3js.org/d3.v2.min.js'></script>
   <script src="https://underscorejs.org/underscore.js"></script>
-  <script src="parallell.js"></script>
+  <script src="js/parallell.js"></script>
 </html>
